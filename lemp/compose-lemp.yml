@@ -1,6 +1,13 @@
 ---
 name: lemp
 
+x-logging: &default-logging
+  logging:
+    driver: json-file
+    options:
+      max-size: ${LOG_MAX_SIZE}
+      max-file: ${LOG_MAX_FILE}
+
 services:
   www:
     image: nginx:${NGINX_IMAGE_TAG}
@@ -17,6 +24,7 @@ services:
     restart: unless-stopped
     depends_on:
       - php
+    <<: *default-logging
 
   php:
     image: php:${PHP_IMAGE_TAG}
@@ -28,6 +36,7 @@ services:
       lempnet:
         ipv4_address: ${LEMPNET_PREFIX}.${PHP_IPV4}
     restart: unless-stopped
+    <<: *default-logging
 
   db:
     image: mariadb:${MARIADB_IMAGE_TAG}
@@ -41,6 +50,7 @@ services:
       lempnet:
         ipv4_address: ${LEMPNET_PREFIX}.${MARIADB_IPV4}
     restart: unless-stopped
+    <<: *default-logging
 
 volumes:
   datadb:
