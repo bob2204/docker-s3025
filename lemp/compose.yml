@@ -27,7 +27,10 @@ services:
     <<: *default-logging
 
   php:
-    image: php:${PHP_IMAGE_TAG}
+    image: php-mysql:${PHP_IMAGE_TAG}
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: php
     hostname: php
     volumes:
@@ -44,6 +47,7 @@ services:
     hostname: mariadb
     environment:
       - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
+      - MARIADB_DATABASE=stage
     volumes:
       - datadb:/var/lib/mysql
     networks:
