@@ -1,0 +1,23 @@
+---
+services:
+  who-1:
+    image: traefik/whoami
+    container_name: who-1
+    hostname: who-1
+    restart: unless-stopped
+    ports:
+      - 8001:80
+  who-2:
+    image: traefik/whoami
+    container_name: who-2
+    hostname: who-2
+    restart: unless-stopped
+    ports:
+      - 8002:80
+  who-3:
+    image: traefik/whoami
+    container_name: who-3
+    hostname: who-3
+    restart: unless-stopped
+    ports:
+      - 8003:80
