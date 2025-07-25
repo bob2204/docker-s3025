@@ -1,0 +1,55 @@
+---
+services:
+  www:
+    image: nginx:1.28
+    ports:
+      - 80:80
+    volumes:
+      - html:/usr/share/nginx/html
+      - conf:/etc/nginx/conf.d
+    networks:
+      - lempnet
+
+  php:
+    image: 192.168.56.200:5000/php-mysql:8.2-fpm
+    volumes:
+      - html:/var/www/html
+    networks:
+      - lempnet
+    deploy:
+      replicas: 2
+
+  db:
+    image: mariadb:11.8.2
+    volumes:
+      - db:/var/lib/mysql
+    environment:
+      - MARIADB_ROOT_PASSWORD_FILE=/run/secrets/mariadb
+    services:
+      - mariadb
+    networks:
+      - lempnet
+
+secrets:
+  mariadb:
+    external: true
+
+networks:
+  lempnet:
+
+volumes:
+  html:
+    driver_opts:
+      type: nfs
+      o: addr=192.168.56.200,vers=4.2
+      device: ":/html"
+  conf:
+    driver_opts:
+      type: nfs
+      o: addr=192.168.56.200,vers=4.2
+      device: ":/nginx-conf"
+  db:
+    driver_opts:
+      type: nfs
+      o: addr=192.168.56.200,vers=4.2
+      device: ":/db"
